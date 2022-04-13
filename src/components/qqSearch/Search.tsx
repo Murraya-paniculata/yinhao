@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import QqBox from './QqBox';
 import "./index.css";
-import { get } from '../utils/require'
-import { debounce } from "../utils/deounce";
+import { get } from '../../utils/require'
+import { debounce } from "../../utils/deounce";
 import Loading from "./Loading";
 
 export interface IQqBox {

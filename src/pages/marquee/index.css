@@ -1,0 +1,9 @@
+.warrp img{
+    display: block;
+    width: 500px;
+    margin: 40px auto;
+    border: 2px solid black;
+}
+.warrp p{
+    text-align: center;
+}
