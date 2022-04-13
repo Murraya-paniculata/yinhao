@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import QqBox from './QqBox';
 import "./index.css";
 import { get } from '../../utils/require'

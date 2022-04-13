@@ -6,7 +6,6 @@ import src2 from "../../assets/2.jpg";
 import src3 from "../../assets/3.jpg";
 
 const srcs = [src1, src2, src3];
-var timer: any;
 
 /////////////////////////////////////////////////////////////
 //// 简单跑马灯效果
@@ -14,6 +13,7 @@ var timer: any;
 /////////////////////////////////////////////////////////////
 
 export default function Marquee() {
+    var timer: any;
     const [index, setIndex] = useState(0);
 
     function exchange() {
