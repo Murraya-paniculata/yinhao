@@ -1,0 +1,29 @@
+.qq__box{
+    height: 60px;
+    border: 1px solid #ddd;
+    display: flex;
+    padding: 10px;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.qq__box > img{
+    border-radius: 50%;
+}
+
+.qq__box > div {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.search {
+    padding: 40px;
+}
+
+.search input{
+    border: none;
+    border-bottom: 1px solid red;
+    outline: none
+}
