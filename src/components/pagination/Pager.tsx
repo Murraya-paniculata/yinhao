@@ -10,6 +10,9 @@ interface Ipager {
 }
 
 export default function Pager(props: Ipager) {
+
+    console.log(props);
+    
     const { limit, total, pannerNumber, current, onPageChange } = props;
     // 计算最小的数字
     const minNumber = getMinNumber(props);
