@@ -3,6 +3,7 @@ import Marquee from './pages/marquee/Marquee';
 // import ContextTest from './pages/context';
 // import PagerTest from './components/pagination';
 import Students from './pages/students';
+import "./redux";
 
 export const ctx = React.createContext({
   a: ""
