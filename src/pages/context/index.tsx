@@ -1,10 +1,10 @@
 import React from 'react'
-import { ctx, ctx2 } from '../../App'
+// import { ctx, ctx2 } from '../../App'
 
 export default function index(props: any) {
   return (
       <div>
-           <ctx.Consumer>
+           {/* <ctx.Consumer>
                 {value => {
                     return <h1>{value.a}</h1>
                 }}
@@ -13,7 +13,7 @@ export default function index(props: any) {
                 {value => {
                     return <h1>{value.a}</h1>
                 }}
-            </ctx2.Consumer>
+            </ctx2.Consumer> */}
       </div>
   )
 }
