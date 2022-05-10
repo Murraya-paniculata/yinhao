@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import QqBox from './QqBox';
 import "./index.css";
-import { get } from '../utils/require'
-import { debounce } from "../utils/deounce";
+import { fetchQqInfoByNumber } from '../utils/server'
+import { useDebounce } from "../hooks/useDebounce";
 import Loading from "./Loading";
+import Empty from './Empty';
 
 export interface IQqBox {
-    qlogo: string,
-    name: string;
-    qq: string;
+    qlogo: string | undefined,
+    name: string | undefined;
+    qq: string | undefined;
 }
 
 export default function Search() {
@@ -19,20 +20,14 @@ export default function Search() {
     const [searchError, setSearchError] = useState(false);
 
     /////////////////////////////////////////////////////////
-    /// 这里使用函数防抖优化数据请求，防止在短时间内用户重复发起请求时
+    /// debounce optimization 
+    /// time default 1s
     /////////////////////////////////////////////////////////
-    var searchHandler = debounce(async function searchqq() {
-        // 对于重复的请求不做处理
-        if(qqBoxProps && qqBoxProps.qq === inputValue) return;
+    var searchHandler = useDebounce(async function searchqq() {
         setIsLoading(true);
-        get({
-            url: "https://api.uomg.com/api/qq.info",
-            params: {
-                qq: inputValue
-            }
-        }).then((data: any) => {
-            console.log(data);
-            if(data.code === 1) {
+        try {
+           const { data } =  await fetchQqInfoByNumber(inputValue);
+           if(data.code === 1){
                 setSearchError(false);
                 setQqBoxProps({
                     name: data.name,
@@ -45,23 +40,28 @@ export default function Search() {
                 setQqBoxProps(null);
             }
             setIsLoading(false)
-        }).catch((err) => {
+        } catch (error) {
             setIsLoading(false)
-        })
-    }, 200)
-
-    const changeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
-        const reg = /^[1-9]\d*$/;
-        if(!reg.test(e.target.value)) {
-            setVerifyError(true);
-            if(e.target.value==="") {
-                setVerifyError(false);
-            }
-        } else {
-            setVerifyError(false);
         }
-    }
+    }, 1000)
+
+    const changeValue = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            setInputValue(e.target.value);
+            const reg = /^[1-9]\d*$/;
+            if(!reg.test(e.target.value.trim())) { // remove leading and trailing spaces
+                setVerifyError(true);
+                if(e.target.value==="") {
+                    setVerifyError(false);
+                }
+            } else {
+                setVerifyError(false);
+                searchHandler();
+            }
+       },
+       [],
+    )
+    
 
   return (
     <div className='search'>
@@ -70,18 +70,13 @@ export default function Search() {
             <p style={{fontSize: 12, color: "green"}}>QQ号事例：1395039366</p>
             <label>QQ:</label>
             &nbsp;&nbsp;&nbsp;
-            <input type="text" placeholder='请输入QQ号' value={inputValue} onChange={(e) => changeValue(e)}
-                onKeyUp={(key) => {
-                if(key.keyCode === 13){
-                    searchHandler();
-                }
-            }} />
+            <input type="text" placeholder='请输入QQ号' value={inputValue} onChange={(e) => changeValue(e)} />
         </div>
         { 
             verifyError ? <span style={{color: "red", fontSize: 14}}>请输入正确的QQ号</span> : null
         }
         {
-            qqBoxProps ? <QqBox {...qqBoxProps} /> : searchError ? <div>暂无数据，请稍后重试</div> : null
+            qqBoxProps ? <QqBox {...qqBoxProps} /> : searchError ? <Empty>暂无数据，请稍后重试</Empty> : null
         }
         {
             isLoading ? <Loading /> : null
